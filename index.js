@@ -1,4 +1,4 @@
-const inquier = require('inquirer');
+const inquirer = require('inquirer');
 const mysql = require('mysql2')
 require('dotenv').config();
 
@@ -15,7 +15,7 @@ const connection = mysql.createConnection(
 
 
 function homeMenu() {
-    inquier
+    inquirer
         .prompt([
             {
                 type: "list",
@@ -53,8 +53,33 @@ function homeMenu() {
                 case "View Employees":
                     viewEmployees();
                     break;
+                case "Update Employee Role":
+                    addRole();
+                    break;
                 default:
                     exit();
             }
         });
+}
+
+//All switch statement functions
+
+function addDepartment(){
+
+    inquirer.prompt({
+        type: "input",
+        message: "Enter the desired department:",
+        name: "newDep"
+    })
+    .then((data) => {
+
+        connection.query
+        ("INSERT INTO department (name) VALUES (?)",
+        [data.newDep],
+        function (err, result) {
+            if (err) throw err;
+        })
+
+
+    })
 }
