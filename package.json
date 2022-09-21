@@ -1,6 +1,7 @@
 {
   "dependencies": {
-    "inquirer": "^9.1.2",
+    "dotenv": "^16.0.2",
+    "inquirer": "^7.0.0",
     "mysql2": "^2.3.3"
   }
 }
