@@ -154,6 +154,8 @@ function addDepartment() {
                     [data.newDep],
                     function (err, result) {
                         if (err) throw err;
+                        console.table(result);
+                        homeMenu();
                     })
         })
 }
@@ -228,6 +230,35 @@ function addEmployee() {
 
         })
 }
+
+
+
+function updateRole(){
+    inquirer
+    .prompt([
+        {
+            type: "input",
+            message: "Which employee's role would you like to update?",
+            name: "empRoleUpdate"
+        },
+        {
+            type: "input",
+            message: "What role do you want to update this employee too?",
+            name: "roleUpdate"
+        },
+    ])
+    .then ((data) => {
+        connection.query('UPDATE employee SET role_id=? WHERE first_name =?',
+        [data.empRoleUpdate, data.roleUpdate],
+        function (err, result) {
+            if (err) throw err;
+            console.table(result);
+            homeMenu();
+        })
+
+    })
+}
+
 
 // exit function //
 
