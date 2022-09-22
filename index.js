@@ -1,17 +1,24 @@
 const inquirer = require('inquirer');
-const mysql = require('mysql2')
+const mysql = require('mysql2');
+require('console.table');
 require('dotenv').config();
 
+// connection config //
 
 const connection = mysql.createConnection(
     {
         host: "localhost",
-        user: process.env.USER,
-        password: process.env.PASSWORD,
-        db: process.env.DATABASE
+        user: process.env.DB_USER,
+        password: process.env.DB_PASSWORD,
+        database: process.env.DB_NAME
     },
-    console.log("Ready to go!")
-)
+   // console.log("Ready to go!")
+);
+// we make the connecion to the Database
+connection.connect(function(err) {
+    if(err) throw err;
+    console.log("Database Connected");
+})
 
 
 function homeMenu() {
@@ -22,19 +29,21 @@ function homeMenu() {
                 name: "choices",
                 message: "Choose what you would like to do",
                 choices: [
-                    "Add department",
-                    "Add role",
-                    "Add employee",
-                    "View departments",
-                    "View roles",
-                    "View employees",
-                    "Update employee role",
+                    "Add Department",
+                    "Add Role",
+                    "Add Employee",
+                    "View Departments",
+                    "View Roles",
+                    "View Employees",
+                    "Update Employee Role",
                     "Exit"
                 ],
             },
+
         ])
-        .then(({ option }) => {
-            switch (option) {
+        .then((option) => {
+            console.log(option.choices);
+            switch (option.choices) {
                 case "Add Department":
                     addDepartment();
                     break;
@@ -54,7 +63,10 @@ function homeMenu() {
                     viewEmployees();
                     break;
                 case "Update Employee Role":
-                    addRole();
+                    updateRole();
+                    break;
+                case "Exit":
+                    exit();
                     break;
                 default:
                     exit();
@@ -62,8 +74,69 @@ function homeMenu() {
         });
 }
 
-//All switch statement functions
-//addDepartment function
+// All switch statement functions //
+// function viewDepartments //
+
+function viewDepartments() {
+    console.log("in VIEW DEPARTMENTS LOGIC")
+    // query the DB
+    connection.query('SELECT name FROM department;', function(err, data) {
+        if(err) {
+            console.log(err);
+            throw err;
+        }
+        // if Success
+        console.log(data);
+
+        console.table(data);
+        // go back to our list
+        homeMenu();
+    });
+
+}
+
+// function viewRoles //
+
+function viewRoles() {
+    console.log("in VIEW ROLES LOGIC")
+    // query the DB
+    connection.query('SELECT title, salary, department_id FROM role;', function(err, data) {
+        if(err) {
+            console.log(err);
+            throw err;
+        }
+        // if Success
+        console.log(data);
+
+        console.table(data);
+        // go back to our list
+        homeMenu();
+    });
+
+}
+
+// function viewEmployees //
+
+function viewEmployees() {
+    console.log("in VIEW EMPLOYEES LOGIC")
+    // query the DB
+    connection.query('SELECT first_name, last_name, role_id, manager_id FROM employee;', function(err, data) {
+        if(err) {
+            console.log(err);
+            throw err;
+        }
+        // if Success
+        console.log(data);
+
+        console.table(data);
+        // go back to our list
+        homeMenu();
+    });
+
+}
+
+
+// addDepartment function //
 
 function addDepartment() {
 
@@ -85,7 +158,8 @@ function addDepartment() {
         })
 }
 
-//addRole function
+// addRole function //
+
 function addRole() {
     inquirer
         .prompt([
@@ -117,7 +191,8 @@ function addRole() {
         })
 }
 
-//addEmployee function
+// addEmployee function //
+
 function addEmployee() {
     inquirer
         .prompt([
@@ -144,7 +219,7 @@ function addEmployee() {
         ])
         .then((data) => {
             connection.query("INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)"
-            [data.empFirstName, data.empLastName, empRoleId, empManagerId],
+            [data.empFirstName, data.empLastName, data.empRoleId, data.empManagerId],
                 function (err, result) {
                     if (err) throw err;
                     console.table(result);
@@ -153,3 +228,11 @@ function addEmployee() {
 
         })
 }
+
+// exit function //
+
+function exit() {
+    console.log("You are exiting the program!!");
+}
+
+homeMenu();
