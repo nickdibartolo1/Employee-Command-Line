@@ -177,14 +177,14 @@ function addRole() {
             },
             {
                 type: "input",
-                message: "What department is the new role?",
+                message: "What department ID# is the new role?",
                 name: "roleDepId"
             }
 
         ])
         .then((data) => {
-            connection.query("INSERT INTO role (title, salary, department_id VALUES (?, ?, ?)",
-                [data.nameOfRole, data.roleSalary, data.roleDepId],
+            connection.query("INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)",
+                [data.nameOfRole, data.roleSalary, Number(data.roleDepId)],
                 function (err, result) {
                     if (err) throw err;
                     console.table(result);
@@ -220,8 +220,10 @@ function addEmployee() {
             },
         ])
         .then((data) => {
-            connection.query("INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)"
-            [data.empFirstName, data.empLastName, data.empRoleId, data.empManagerId],
+            console.log(data)
+            console.log(data.empFirstName, data.empLastName, Number(data.empRoleId), Number(data.empManagerId))
+            connection.query("INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)",
+            [data.empFirstName, data.empLastName, Number(data.empRoleId), Number(data.empManagerId)],
                 function (err, result) {
                     if (err) throw err;
                     console.table(result);
