@@ -21,6 +21,6 @@ MySQL2
 Node.js installation is required for being able to command the terminal.
 Inquirer and MySQL2 is required for the application to run.
 ## Video
-x
+https://drive.google.com/file/d/1vMcgWUWvt8cPboTl_Ethl-aywPKuXI3P/view
 ## Contributing
 Nick DiBartolo
